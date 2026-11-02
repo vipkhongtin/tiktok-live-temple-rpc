@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Bảng Điều Khiển JSON-RPC 2.0 — Chùa Linh Ứng TikTok Live</title>
+  <link rel="icon" href="/favicon.ico" type="image/svg+xml" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;600;700;800&family=Noto+Serif:wght@700;900&display=swap" rel="stylesheet">
@@ -40,10 +41,12 @@
       border: 1.5px solid var(--border);
       border-radius: 18px;
       padding: 18px 24px;
+      flex-wrap: wrap;
+      gap: 12px;
     }
     .top-title {
       font-family: 'Noto Serif', serif;
-      font-size: 26px;
+      font-size: 24px;
       color: var(--gold-light);
     }
     .top-sub {
@@ -54,6 +57,7 @@
     .top-links {
       display: flex;
       gap: 12px;
+      flex-wrap: wrap;
     }
     .btn {
       cursor: pointer;
@@ -69,6 +73,7 @@
       align-items: center;
       justify-content: center;
       gap: 8px;
+      white-space: nowrap;
     }
     .btn.gold {
       background: linear-gradient(180deg, #f4c150 0%, #c48312 100%);
@@ -77,8 +82,11 @@
     }
     .grid {
       display: grid;
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
       gap: 20px;
+    }
+    @media (max-width: 960px) {
+      .grid { grid-template-columns: 1fr; }
     }
     .card {
       background: var(--card);
@@ -88,16 +96,33 @@
       display: flex;
       flex-direction: column;
       gap: 14px;
+      min-width: 0;
     }
     .card h2 {
       font-size: 18px;
       color: var(--gold-light);
       border-bottom: 1px solid rgba(244, 193, 80, 0.2);
       padding-bottom: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
     }
     .row {
       display: flex;
       gap: 10px;
+      align-items: center;
+    }
+    .label-col {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      flex: 1;
+      min-width: 0;
+    }
+    .label-col label {
+      font-size: 12.5px;
+      font-weight: 700;
+      color: var(--muted);
     }
     input, select, textarea {
       width: 100%;
@@ -108,21 +133,27 @@
       color: var(--text);
       font-family: inherit;
       font-size: 14px;
+      min-width: 0;
     }
     .action-grid {
       display: grid;
-      grid-template-columns: repeat(2, 1fr);
+      grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: 10px;
     }
-    pre {
+    pre#rpcOutput {
       background: #0b0202;
       border: 1px solid rgba(244, 193, 80, 0.25);
       border-radius: 10px;
       padding: 12px;
       font-size: 12.5px;
       color: #9ef0c0;
-      overflow-x: auto;
-      max-height: 280px;
+      max-height: 290px;
+      overflow-y: auto;
+      overflow-x: hidden;
+      white-space: pre-wrap;
+      word-break: break-word;
+      overflow-wrap: anywhere;
+      line-height: 1.45;
     }
   </style>
 </head>
@@ -130,26 +161,61 @@
   <div class="container">
     <header class="top-bar">
       <div>
-        <div class="top-title">🪷 BẢNG ĐIỀU KHIỂN CHÙA ONLINE TIKTOK LIVE RPC (BUN.JS + ZEROTTS MAI CHI)</div>
+        <div class="top-title">☸ BẢNG ĐIỀU KHIỂN CHÙA ONLINE TIKTOK LIVE RPC (ĐA GIỌNG ĐỌC AI & NHẠC THIỀN)</div>
         <div class="top-sub" id="statusBanner">Đang tải trạng thái hệ thống...</div>
       </div>
       <div class="top-links">
         <a class="btn" href="/?obs=1" target="_blank">📺 Mở Màn Hình OBS 9:16 Sạch (?obs=1)</a>
-        <a class="btn gold" href="/" target="_blank">🪷 Mở Màn Hình Live Chính</a>
+        <a class="btn gold" href="/" target="_blank">☸ Mở Màn Hình Live Chính</a>
       </div>
     </header>
 
     <div class="grid">
       <section class="card">
-        <h2>📡 1. Kết Nối Phòng TikTok Live & Giọng Đọc ZeroTTS (Mai Chi)</h2>
+        <h2>📡 1. Kết Nối TikTok Live, Giọng Đọc AI & Nhạc Nền Chùa</h2>
         <div class="row">
-          <input type="text" id="ttUser" placeholder="Nhập @username TikTok đang phát Live..." />
-          <button class="btn gold" id="btnConn">Kết Nối Live</button>
-          <button class="btn" id="btnDisc">Ngắt</button>
+          <input type="text" id="ttUser" value="@zenfacts_vn" placeholder="Nhập @username TikTok đang phát Live..." />
+          <button class="btn gold" id="btnConn">🔌 Kết Nối Live</button>
+          <button class="btn" id="btnDisc">❌ Ngắt</button>
         </div>
+        <div id="adminTikTokStatus" style="padding: 8px 12px; border-radius: 9px; background: #140403; border: 1px solid rgba(244,193,80,0.35); font-size: 13px; font-weight: 700; color: #ffe694;">
+          🔴 Đang ngắt kết nối — Nhập @username TikTok đang phát Live và bấm Kết Nối
+        </div>
+
+        <div class="row">
+          <div class="label-col">
+            <label for="selTtsVoice">🎙️ Chọn Giọng Đọc Khấn AI</label>
+            <select id="selTtsVoice">
+              <option value="hoaimy">🌸 Nữ: Hoài My (Edge Neural Truyền Cảm)</option>
+              <option value="namminh">☸ Nam: Nam Minh (Edge Neural Trầm Ấm)</option>
+              <option value="maichi">✨ Nữ: Mai Chi (ZeroTTS Offline AI)</option>
+              <option value="google_vi">🌐 Nữ: Chị Google Tiếng Việt</option>
+            </select>
+          </div>
+          <div class="label-col">
+            <label for="selMusicMode">🎵 Chế Độ Nhạc Nền Chùa</label>
+            <select id="selMusicMode">
+              <option value="auto">Tự động (Nhạc Niệm Phật / Chuông Xoay)</option>
+              <option value="youtube">▶️ Phát Nhạc Từ Link YouTube</option>
+              <option value="chant_m4a">Nhạc Niệm Phật A Di Đà (File .m4a)</option>
+              <option value="singing_bowl">Chuông Xoay Tây Tạng (Tibetan Bowl)</option>
+              <option value="zen_flute">Sáo Thiền & Chuông Gió Ngũ Cung</option>
+              <option value="temple_chant">Tụng Kinh Gõ Mõ Đạo Tràng</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="row">
+          <input type="text" id="adminYtUrl" placeholder="Dán link YouTube (vd: https://youtu.be/...) để phát nhạc nền trên màn hình Live" />
+          <button class="btn gold" id="btnAdminYtPlay">▶️ Phát YouTube</button>
+        </div>
+
         <div class="row">
           <input type="text" id="ttsDirectText" value="Nam mô A Di Đà Phật. Chùa Linh Ứng Online xin kính chào quý thí chủ thập phương." />
-          <button class="btn gold" id="btnSpeakMaiChi">🎙️ Đọc thử Giọng Mai Chi</button>
+          <button class="btn gold" id="btnSpeakTest">🔊 Nghe Thử</button>
+        </div>
+        <div id="adminTtsStatus" style="font-size: 12.5px; color: #9ef0c0; font-weight: 600;">
+          ✅ Giọng đọc AI sẵn sàng — Bấm "🔊 Nghe Thử" để tạo và nghe âm thanh trực tiếp
         </div>
         <audio id="adminAudioPreview" controls style="width: 100%; height: 38px;"></audio>
       </section>
@@ -173,10 +239,17 @@
       </section>
 
       <section class="card">
-        <h2>💬 3. Giả Lập Bình Luận Người Xem TikTok</h2>
+        <h2>💬 3. Giả Lập Bình Luận Người Xem & Tự Động Đông Người</h2>
         <div class="row">
           <input type="text" id="simComment" value="Con xin gieo quẻ cầu tài lộc đầu tháng ạ" placeholder="Nhập nội dung bình luận TikTok..." />
           <button class="btn gold" id="btnSendComment">Gửi Comment</button>
+        </div>
+        <div class="row">
+          <div class="label-col">
+            <label for="simInterval">⏱️ Tần suất Giả lập Người xem tự động (ms)</label>
+            <input type="number" id="simInterval" value="8500" min="2500" max="60000" step="500" />
+          </div>
+          <button class="btn gold" id="btnToggleSimAdmin" style="margin-top: 18px;">🤖 Bật/Tắt Auto-Sim</button>
         </div>
         <p style="font-size: 13px; color: var(--muted);">
           Từ khóa tự động nhận diện: <code>thắp hương</code>, <code>bái phật</code>, <code>cầu ...</code>, <code>xin xăm / gieo quẻ</code>, <code>thỉnh chuông</code>, <code>gõ mõ</code>.
@@ -184,13 +257,18 @@
       </section>
 
       <section class="card">
-        <h2>🔌 4. Nhật Ký Phản Hồi JSON-RPC 2.0 (`/rpc`)</h2>
+        <h2>
+          <span>🔌 4. Nhật Ký Phản Hồi JSON-RPC 2.0 (`/rpc`)</span>
+          <button class="btn" id="btnClearRpcLog" style="padding: 4px 10px; font-size: 12px;">Xóa Log</button>
+        </h2>
         <pre id="rpcOutput">{ "status": "Sẵn sàng nhận lệnh JSON-RPC 2.0" }</pre>
       </section>
     </div>
   </div>
 
   <script>
+    let currentAutoSim = false;
+
     async function sendRpc(method, extraParams = {}) {
       const user = document.getElementById('rpcUser').value.trim() || 'Thí Chủ';
       const wish = document.getElementById('rpcWish').value.trim();
@@ -198,8 +276,9 @@
         jsonrpc: '2.0',
         id: Date.now(),
         method,
-        params: { user, wish, ...extraParams }
+        params: { user, wish, manual: true, ...extraParams }
       };
+      document.getElementById('rpcOutput').textContent = `⏳ Đang gửi lệnh "${method}"...`;
       const res = await fetch('/rpc', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -211,30 +290,98 @@
       return data;
     }
 
-    document.getElementById('btnConn').onclick = () => {
+    document.getElementById('btnConn').onclick = async (e) => {
+      const btn = e.currentTarget;
       const username = document.getElementById('ttUser').value.trim();
-      sendRpc('live.connect', { username });
+      btn.textContent = '⏳ Đang nối...';
+      document.getElementById('adminTikTokStatus').textContent = `⏳ Đang kết nối tới phòng TikTok Live ${username}...`;
+      await sendRpc('live.connect', { username });
+      btn.textContent = '🔌 Kết Nối Live';
     };
     document.getElementById('btnDisc').onclick = () => sendRpc('live.disconnect', {});
     document.getElementById('btnSendComment').onclick = () => {
       const comment = document.getElementById('simComment').value.trim();
       sendRpc('temple.comment', { comment });
     };
-    document.getElementById('btnSpeakMaiChi').onclick = async () => {
+    document.getElementById('btnAdminYtPlay').onclick = () => {
+      const youtubeUrl = document.getElementById('adminYtUrl').value.trim();
+      if (!youtubeUrl) return;
+      document.getElementById('selMusicMode').value = 'youtube';
+      sendRpc('temple.updateSettings', { bgMusicMode: 'youtube', youtubeUrl });
+    };
+    document.getElementById('btnSpeakTest').onclick = async (e) => {
+      const btn = e.currentTarget;
+      const ttsSt = document.getElementById('adminTtsStatus');
       const text = document.getElementById('ttsDirectText').value.trim();
-      const data = await sendRpc('temple.speak', { text, voice: 'maichi', broadcast: true });
+      const voice = document.getElementById('selTtsVoice').value;
+      btn.textContent = '⏳ Đang tạo giọng...';
+      ttsSt.textContent = `⏳ Đã nhận lệnh! Đang tổng hợp giọng đọc AI (${voice})...`;
+      const data = await sendRpc('temple.speak', { text, voice, broadcast: true });
       if (data?.result?.url) {
         const player = document.getElementById('adminAudioPreview');
         player.src = data.result.url;
-        player.play().catch(() => {});
+        btn.textContent = '🔊 Đang phát...';
+        ttsSt.textContent = `🔊 Đang phát giọng đọc AI (${data.result.engine || voice}) — Thời gian tạo: ${data.result.synthSec || 0}s`;
+        player.onended = () => {
+          btn.textContent = '🔊 Nghe Thử';
+          ttsSt.textContent = `✅ Đã phát xong âm thanh (${data.result.engine || voice})`;
+        };
+        player.play().catch(() => {
+          btn.textContent = '🔊 Nghe Thử';
+        });
+      } else {
+        btn.textContent = '🔊 Nghe Thử';
+        ttsSt.textContent = `⚠️ Không tạo được file âm thanh: ${data?.result?.error || data?.error?.message || 'Lỗi'}`;
       }
+    };
+
+    document.getElementById('selTtsVoice').onchange = (e) => {
+      sendRpc('temple.updateSettings', { ttsVoice: e.target.value });
+    };
+    document.getElementById('selMusicMode').onchange = (e) => {
+      sendRpc('temple.updateSettings', { bgMusicMode: e.target.value });
+    };
+    document.getElementById('btnToggleSimAdmin').onclick = () => {
+      const autoSimIntervalMs = Math.max(2500, Number(document.getElementById('simInterval').value) || 8500);
+      sendRpc('temple.updateSettings', { autoSim: !currentAutoSim, autoSimIntervalMs });
+    };
+    document.getElementById('btnClearRpcLog').onclick = () => {
+      document.getElementById('rpcOutput').textContent = '{ "status": "Đã xóa nhật ký" }';
     };
 
     async function refreshStatus() {
       const res = await fetch('/api/state');
       const st = await res.json();
+      currentAutoSim = Boolean(st.settings?.autoSim);
       document.getElementById('statusBanner').textContent =
-        `Hương đã thắp: ${st.totalIncense} | Tổng Công Đức: ${st.totalMerit} | ZeroTTS: ${st.tts?.status} (Giọng: ${st.tts?.voice})`;
+        `Hương đã thắp: ${st.totalIncense} | Tổng Công Đức: ${st.totalMerit} | TTS Engine: ${st.tts?.engine} (Giọng: ${st.settings?.ttsVoice || st.tts?.voice}) | Nhạc nền: ${st.settings?.bgMusicMode || 'auto'}`;
+      if (st.settings?.ttsVoice) {
+        document.getElementById('selTtsVoice').value = st.settings.ttsVoice;
+      }
+      if (st.settings?.bgMusicMode) {
+        document.getElementById('selMusicMode').value = st.settings.bgMusicMode;
+      }
+      if (st.settings?.youtubeUrl && !document.getElementById('adminYtUrl').value) {
+        document.getElementById('adminYtUrl').value = st.settings.youtubeUrl;
+      }
+      const ttEl = document.getElementById('adminTikTokStatus');
+      if (ttEl && st.tiktok) {
+        if (st.tiktok.connected) {
+          ttEl.style.color = '#58e698';
+          ttEl.textContent = `🟢 ĐÃ KẾT NỐI LIVE @${st.tiktok.username} • ${st.tiktok.viewerCount || 0} người xem (Room ID: ${st.tiktok.roomId || 'Active'})`;
+        } else if (st.tiktok.connecting) {
+          ttEl.style.color = '#ffc14d';
+          ttEl.textContent = `⏳ Đang kết nối tới phòng Live @${st.tiktok.username}...`;
+        } else {
+          ttEl.style.color = '#ff8a80';
+          ttEl.textContent = st.tiktok.lastError
+            ? `🔴 Chưa kết nối: ${st.tiktok.lastError}`
+            : `🔴 Đang ngắt kết nối — Nhập @username TikTok đang phát Live và bấm Kết Nối`;
+        }
+      }
+      document.getElementById('btnToggleSimAdmin').textContent = currentAutoSim
+        ? '🤖 Auto-Sim: ĐANG BẬT'
+        : '🤖 Auto-Sim: TẮT';
     }
     refreshStatus();
     setInterval(refreshStatus, 4000);

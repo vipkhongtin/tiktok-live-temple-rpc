@@ -1120,3 +1120,617 @@ body.obs-mode .stage-wrapper {
   border-left: 3px solid var(--gold-main);
   color: #f3e5cf;
 }
+
+
+/* ==========================================================================
+   2B. THANH TÍCH TỤ HÀO QUANG CỘNG ĐỒNG (KHAI MỞ ĐẠI LỄ PHÁP VŨ CAM LỒ)
+   ========================================================================== */
+.community-goal-bar {
+  position: absolute;
+  top: 72px;
+  left: 24px;
+  right: 24px;
+  z-index: 19;
+  padding: 8px 16px;
+  border-radius: 14px;
+  background: rgba(18, 5, 3, 0.88);
+  border: 1.5px solid rgba(244, 193, 80, 0.55);
+  pointer-events: none;
+}
+.community-goal-bar.bonus-active {
+  border-color: #fff3b0;
+  background: linear-gradient(90deg, rgba(110, 18, 10, 0.94) 0%, rgba(168, 42, 16, 0.94) 100%);
+}
+.goal-info-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--gold-bright);
+  margin-bottom: 5px;
+}
+.goal-progress-num {
+  color: #ffffff;
+  font-weight: 800;
+}
+.goal-track {
+  width: 100%;
+  height: 8px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.14);
+  overflow: hidden;
+}
+.goal-fill {
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #f4c150 0%, #fff3b0 100%);
+  transition: width 0.4s ease;
+}
+
+.altar-offerings-bar {
+  position: absolute;
+  top: 760px;
+  left: 34px;
+  z-index: 15;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  pointer-events: none;
+}
+.offering-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 4px 12px;
+  border-radius: 999px;
+  background: rgba(20, 5, 3, 0.88);
+  border: 1.5px solid rgba(244, 193, 80, 0.55);
+  font-size: 13.5px;
+  font-weight: 800;
+  color: var(--gold-bright);
+}
+.offering-badge.dragon {
+  border-color: #fff3b0;
+  background: rgba(92, 16, 10, 0.92);
+}
+.off-icon {
+  font-size: 16px;
+}
+.off-count {
+  color: #ffffff;
+}
+
+
+/* ==========================================================================
+   NÂNG CẤP CHỐNG TIKTOK QUÉT "ẢNH TĨNH PHẦN BÊN TRÊN" & PHỐI CẢNH SẢNH CHÍNH (v2.6)
+   ========================================================================== */
+
+/* 0. Sửa lỗi mất nền khi mở chung với bảng Điều khiển Live & RPC (Flexbox width collapse)
+      và nâng cấp thẩm mỹ nền cho bảng Quick Dock */
+.stage-wrapper {
+  width: calc(96vh * 9 / 16) !important;
+  min-width: 320px;
+  flex-shrink: 0 !important;
+  contain: none !important;
+  background: #120403 url('/assets/amitabha_stage.jpg') center top / cover no-repeat !important;
+}
+
+body.obs-mode .stage-wrapper {
+  width: calc(100vh * 9 / 16) !important;
+}
+
+.stage-9x16 {
+  contain: none !important;
+  background: #120403 url('/assets/amitabha_stage.jpg') center top / cover no-repeat !important;
+}
+
+.quick-dock {
+  flex-shrink: 0 !important;
+  background: linear-gradient(180deg, #2a0a06 0%, #160403 100%) !important;
+  border: 2px solid rgba(244, 193, 80, 0.65) !important;
+  box-shadow: 0 14px 40px rgba(0, 0, 0, 0.75), inset 0 1px 0 rgba(255, 232, 158, 0.25) !important;
+}
+
+.dock-section {
+  background: linear-gradient(180deg, rgba(64, 14, 9, 0.72) 0%, rgba(28, 6, 4, 0.85) 100%) !important;
+  border: 1px solid rgba(244, 193, 80, 0.35) !important;
+}
+
+/* 1. Cố định tuyệt đối ảnh nền Chánh Điện (KHÔNG dịch chuyển ảnh nền riêng lẻ gây hiện tượng người bị trượt trên sàn!) */
+.sanctuary-bg-img {
+  display: block !important;
+  transform: none !important;
+  animation: none !important;
+}
+
+#templeCanvas {
+  background: transparent !important;
+}
+
+/* 1B. Chuyển toàn bộ vị trí và kích thước thực của Chủ Lễ và VIP theo đúng luật phối cảnh Xa-Gần */
+.central-worshipper {
+  left: 540px !important;
+  top: 975px !important;
+  z-index: 26 !important;
+  animation: none;
+}
+
+/* Khi đứng yên quỳ lễ ở bậc thềm cao nhất trước Lư Hương (ở xa y=1145 -> scale nhỏ 0.76, thẻ tên vẫn rõ nét) */
+.central-worshipper .central-sprite-stack {
+  transform-origin: bottom center;
+  transform: scale(0.76);
+  transition: transform 0.25s ease;
+}
+
+/* Khi bước đi từ cuối thảm đỏ (gần camera y=1670, to 1.15) tiến dần lên bậc thềm Lư Hương (xa camera y=1145, nhỏ 0.78) */
+.central-worshipper.walking-up {
+  z-index: 35 !important;
+  animation: centralWalkUpPerspective 1.95s cubic-bezier(0.22, 0.61, 0.36, 1) forwards !important;
+}
+
+.central-worshipper.walking-up .central-sprite-stack {
+  animation: centralSpritePerspectiveScale 1.95s cubic-bezier(0.22, 0.61, 0.36, 1) forwards !important;
+}
+
+.central-worshipper .worshipper-wish-bubble,
+.central-worshipper .devotee-aura-halo {
+  transition: opacity 0.25s ease, transform 0.25s ease;
+}
+
+.central-worshipper.walking-up .worshipper-wish-bubble,
+.central-worshipper.walking-up .devotee-aura-halo {
+  opacity: 0 !important;
+  transform: translateY(8px);
+}
+
+@keyframes centralWalkUpPerspective {
+  0% {
+    transform: translate3d(-50%, 490px, 0);
+  }
+  100% {
+    transform: translate3d(-50%, 0px, 0);
+  }
+}
+
+@keyframes centralSpritePerspectiveScale {
+  0% {
+    transform: scale(1.14);
+  }
+  100% {
+    transform: scale(0.76);
+  }
+}
+
+/* 6 vị trí Đệm Quỳ VIP trên bục gỗ (ở xa y=1188 -> scale 0.76 cân xứng với đệm gấm đỏ) */
+.vip-devotee-slot .devotee-sprite {
+  width: 78px !important;
+  height: 102px !important;
+}
+
+/* Nhịp thở tu tập nhẹ nhàng cho Phật tử quỳ lễ (chỉ co giãn vi mô phần thân trên, giữ nguyên đầu gối bám sàn) */
+.hall-seat .devotee-sprite,
+.vip-devotee-slot .devotee-sprite {
+  transform-origin: bottom center;
+  animation: devoteeMeditateBreathe 3.6s ease-in-out infinite alternate;
+}
+
+@keyframes devoteeMeditateBreathe {
+  0% {
+    transform: scaleY(1) scaleX(1);
+  }
+  100% {
+    transform: scaleY(1.022) scaleX(0.992);
+  }
+}
+
+/* 2. Tăng tốc độ và mở lại lớp tia sáng ngược chiều (Counter-Rotating Sunburst) */
+.halo-sunburst {
+  animation: haloSpinCw 28s linear infinite !important;
+}
+
+.halo-counter-rays {
+  display: block !important;
+  position: absolute;
+  inset: 28px;
+  border-radius: 50%;
+  background: repeating-conic-gradient(
+    from 15deg,
+    rgba(255, 215, 95, 0.32) 0deg 6deg,
+    rgba(255, 180, 40, 0.02) 6deg 15deg,
+    rgba(255, 248, 200, 0.25) 15deg 20deg,
+    rgba(255, 170, 30, 0.01) 20deg 30deg
+  );
+  will-change: transform;
+  animation: haloSpinCcw 22s linear infinite;
+}
+
+/* 3. Vòng sóng năng lượng Hào Quang lan tỏa liên tục (Expanding Ripple Rings) */
+.halo-pulse-ring.ring-1 {
+  animation: haloRippleExpand 4.2s ease-out infinite;
+}
+.halo-pulse-ring.ring-2 {
+  animation: haloRippleExpand 4.2s ease-out 2.1s infinite;
+}
+
+@keyframes haloRippleExpand {
+  0% {
+    transform: translate3d(-50%, -50%, 0) scale(0.65);
+    opacity: 0.85;
+  }
+  75% {
+    opacity: 0.45;
+  }
+  100% {
+    transform: translate3d(-50%, -50%, 0) scale(1.38);
+    opacity: 0;
+  }
+}
+
+/* 4. Bánh xe Pháp Luân SVG xoay mượt liên tục */
+.dharma-wheel-outer {
+  animation: haloSpinCw 32s linear infinite !important;
+}
+.dharma-wheel-inner {
+  animation: haloSpinCcw 20s linear infinite !important;
+}
+
+/* 5. Hào quang Đài Sen trên tay Phật & Cột sáng Tâm Hương nhịp thở liên tục */
+.lotus-hand-halo {
+  animation: lotusHandPulse 3.4s ease-in-out infinite alternate;
+}
+@keyframes lotusHandPulse {
+  0% {
+    transform: translate3d(-50%, -50%, 0) scale(0.92);
+    opacity: 0.68;
+  }
+  100% {
+    transform: translate3d(-50%, -50%, 0) scale(1.22);
+    opacity: 0.98;
+  }
+}
+
+.sacred-light-beam {
+  animation: beamBreathing 4s ease-in-out infinite alternate;
+}
+@keyframes beamBreathing {
+  0% {
+    opacity: 0.55;
+    transform: translate3d(-50%, 0, 0) scaleX(0.92);
+  }
+  100% {
+    opacity: 0.88;
+    transform: translate3d(-50%, 0, 0) scaleX(1.18);
+  }
+}
+
+/* 6. Luồng Hào Quang Thiên Giới rọi chéo từ đỉnh Chánh Điện (Celestial God-Rays) */
+.stage-9x16::before {
+  content: '';
+  position: absolute;
+  top: -120px;
+  left: -180px;
+  right: -180px;
+  height: 980px;
+  z-index: 3;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 65% 45% at 50% 18%, rgba(255, 232, 145, 0.22) 0%, rgba(255, 195, 70, 0.06) 55%, transparent 80%),
+    repeating-linear-gradient(
+      108deg,
+      rgba(255, 242, 185, 0.0) 0px,
+      rgba(255, 242, 185, 0.08) 48px,
+      rgba(255, 215, 110, 0.16) 92px,
+      rgba(255, 242, 185, 0.0) 148px
+    );
+  will-change: transform, opacity;
+  animation: celestialRaysSweep 9s ease-in-out infinite alternate;
+}
+
+@keyframes celestialRaysSweep {
+  0% {
+    transform: translate3d(-45px, 0, 0) rotate(-2deg) scale(1);
+    opacity: 0.65;
+  }
+  50% {
+    opacity: 0.95;
+  }
+  100% {
+    transform: translate3d(45px, 12px, 0) rotate(2deg) scale(1.05);
+    opacity: 0.72;
+  }
+}
+
+/* ==========================================================================
+   7. CÀI ĐẶT SERVER / GIỌNG ĐỌC / NHẠC NỀN TRÊN QUICK DOCK & ĐA DẠNG HÓA PHẬT TỬ
+   ========================================================================== */
+.dock-field-group {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.dock-field-label {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--gold-bright);
+  letter-spacing: 0.3px;
+}
+
+.dock-select {
+  width: 100%;
+  background: #120403;
+  border: 1px solid rgba(244, 193, 80, 0.48);
+  border-radius: 9px;
+  padding: 8px 10px;
+  color: var(--ivory);
+  font-size: 13px;
+  font-weight: 600;
+  outline: none;
+  cursor: pointer;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+.dock-select:focus,
+.dock-select:hover {
+  border-color: var(--gold-bright);
+  box-shadow: 0 0 8px rgba(244, 193, 80, 0.25);
+}
+
+/* Đệm Quỳ Hoa Sen (Bồ Đoàn Gấm Đỏ Viền Vàng) đặt dưới đầu gối Phật tử */
+.lotus-kneel-cushion {
+  position: absolute;
+  bottom: 4px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 78px;
+  height: 24px;
+  border-radius: 50%;
+  background:
+    radial-gradient(ellipse at 50% 42%, #d93829 0%, #8c140b 62%, #4a0704 100%);
+  border: 2px solid #f4c150;
+  box-shadow:
+    0 5px 10px rgba(0, 0, 0, 0.78),
+    inset 0 2px 5px rgba(255, 230, 140, 0.55);
+  z-index: 0;
+  pointer-events: none;
+}
+.lotus-kneel-cushion::after {
+  content: '';
+  position: absolute;
+  inset: 3px 8px;
+  border-radius: 50%;
+  border: 1px dashed rgba(255, 236, 160, 0.72);
+}
+
+.central-cushion {
+  width: 112px;
+  height: 32px;
+  bottom: 2px;
+  border-width: 2.5px;
+  box-shadow:
+    0 6px 16px rgba(0, 0, 0, 0.85),
+    0 0 18px rgba(255, 200, 70, 0.45),
+    inset 0 2px 6px rgba(255, 240, 175, 0.65);
+}
+
+.central-worshipper.walking-up .central-cushion {
+  opacity: 0;
+}
+
+/* Vòng Hào Quang Chánh Niệm sau lưng Chủ Lễ và Top VIP */
+.devotee-aura-halo {
+  position: absolute;
+  bottom: 42px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 118px;
+  height: 118px;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(255, 238, 155, 0.45) 0%,
+    rgba(244, 185, 58, 0.22) 48%,
+    transparent 74%
+  );
+  border: 1.5px solid rgba(255, 232, 140, 0.48);
+  box-shadow: 0 0 22px rgba(255, 210, 80, 0.38);
+  z-index: 0;
+  pointer-events: none;
+  animation: devoteeAuraPulse 3.2s ease-in-out infinite alternate;
+}
+
+.vip-devotee-slot .devotee-aura-halo {
+  width: 78px;
+  height: 78px;
+  bottom: 34px;
+}
+
+@keyframes devoteeAuraPulse {
+  0% {
+    transform: translateX(-50%) scale(0.92);
+    opacity: 0.72;
+  }
+  100% {
+    transform: translateX(-50%) scale(1.08);
+    opacity: 1;
+  }
+}
+
+/* 5 Bộ Pháp Phục Phật Tử Đa Dạng (Giữ nguyên position: absolute cho .pose-frame để không bị nhảy hình!) */
+.hall-seat .devotee-sprite,
+.vip-devotee-slot .devotee-sprite {
+  position: relative;
+  z-index: 1;
+}
+
+.central-sprite-stack .pose-frame {
+  position: absolute !important;
+  bottom: 0 !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  z-index: 2;
+}
+
+/* 1. Áo Lam Truyền Thống (Thanh tịnh, phổ biến nhất trong Đạo Tràng) */
+.robe-lam .devotee-sprite {
+  filter: hue-rotate(-6deg) saturate(1.22) brightness(1.04) contrast(1.03);
+}
+
+/* 2. Áo Nâu Sòng Cư Sĩ (Trầm mặc, cổ kính) */
+.robe-nau .devotee-sprite {
+  filter: sepia(0.55) hue-rotate(-16deg) saturate(1.42) brightness(0.98) contrast(1.05);
+}
+
+/* 3. Áo Vàng Hộ Pháp Kim Cang (Rực rỡ, trang nghiêm dành cho Chủ Lễ & Top VIP) */
+.robe-vang .devotee-sprite {
+  filter: sepia(0.72) hue-rotate(4deg) saturate(1.75) brightness(1.08) contrast(1.05);
+}
+
+/* 4. Áo Hồng Liên Hoa (Dịu dàng, thiện lành) */
+.robe-lien .devotee-sprite {
+  filter: sepia(0.34) hue-rotate(295deg) saturate(1.32) brightness(1.05) contrast(1.03);
+}
+
+/* 5. Áo Ngọc Bích Lưu Ly (Thanh lương, trí tuệ) */
+.robe-ngoc .devotee-sprite {
+  filter: hue-rotate(-50deg) saturate(1.2) brightness(1.05) contrast(1.03);
+}
+
+.devotee-sprite-wrap {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  z-index: 1;
+}
+
+/* Làm đẹp Thẻ tên VIP & Phật tử trong Đạo Tràng */
+.vip-rank-pill {
+  background: linear-gradient(180deg, rgba(42, 10, 6, 0.96) 0%, rgba(16, 4, 3, 0.98) 100%) !important;
+  border: 1.5px solid #ffd86b !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.75), 0 0 10px rgba(244, 193, 80, 0.32) !important;
+  z-index: 3;
+}
+
+.seat-badge {
+  background: linear-gradient(180deg, rgba(32, 8, 5, 0.94) 0%, rgba(12, 3, 2, 0.96) 100%) !important;
+  border: 1px solid rgba(255, 212, 100, 0.78) !important;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.7) !important;
+  z-index: 3;
+}
+
+/* ==========================================================================
+   8. PHẢN HỒI NÚT BẤM TỨC THÌ, TRẠNG THÁI LIVE / TTS & MINI PLAYER YOUTUBE
+   ========================================================================== */
+.quick-dock {
+  width: 425px !important;
+}
+
+.dock-btn {
+  transition: transform 0.1s ease, filter 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+  user-select: none;
+}
+.dock-btn:hover {
+  filter: brightness(1.14);
+  border-color: #fff3b0;
+  box-shadow: 0 0 12px rgba(244, 193, 80, 0.35);
+}
+.dock-btn:active {
+  transform: scale(0.95);
+}
+.dock-btn.btn-flash-ok {
+  background: linear-gradient(180deg, #1f8f52 0%, #125932 100%) !important;
+  border-color: #7bffb5 !important;
+  color: #ffffff !important;
+  box-shadow: 0 0 14px rgba(88, 230, 152, 0.55) !important;
+}
+
+.dock-toast {
+  padding: 9px 12px;
+  border-radius: 11px;
+  background: rgba(20, 48, 30, 0.92);
+  border: 1.5px solid rgba(98, 235, 156, 0.65);
+  color: #eafff2;
+  font-size: 12.5px;
+  font-weight: 700;
+  line-height: 1.35;
+  transition: all 0.2s ease;
+}
+.dock-toast.toast-warn {
+  background: rgba(75, 38, 8, 0.95);
+  border-color: #ffc14d;
+  color: #fff3d1;
+}
+.dock-toast.toast-err {
+  background: rgba(82, 14, 14, 0.95);
+  border-color: #ff6b6b;
+  color: #ffe5e5;
+}
+
+.status-feedback-box {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 10px;
+  border-radius: 9px;
+  background: rgba(10, 3, 2, 0.85);
+  border: 1px solid rgba(244, 193, 80, 0.32);
+  font-size: 12px;
+  font-weight: 600;
+  color: #f7e6c4;
+  line-height: 1.35;
+}
+
+.status-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  background: #95a5a6;
+}
+.status-dot.ready,
+.status-dot.live {
+  background: #2ecc71;
+  box-shadow: 0 0 8px #2ecc71;
+}
+.status-dot.busy {
+  background: #f39c12;
+  box-shadow: 0 0 8px #f39c12;
+  animation: dotBlink 0.9s infinite alternate;
+}
+.status-dot.offline {
+  background: #e74c3c;
+  box-shadow: 0 0 6px rgba(231, 76, 60, 0.7);
+}
+
+@keyframes dotBlink {
+  from { opacity: 0.4; transform: scale(0.85); }
+  to { opacity: 1; transform: scale(1.15); }
+}
+
+.youtube-music-box {
+  background: rgba(0, 0, 0, 0.25);
+  padding: 9px;
+  border-radius: 10px;
+  border: 1px dashed rgba(244, 193, 80, 0.35);
+}
+
+.yt-status-line {
+  font-size: 11.5px;
+  color: #ffd97d;
+  font-weight: 600;
+  line-height: 1.35;
+}
+
+.yt-mini-player-wrap {
+  width: 100%;
+  height: 0;
+  overflow: hidden;
+  border-radius: 8px;
+  transition: height 0.25s ease;
+}
+.yt-mini-player-wrap.active {
+  height: 140px;
+  margin-top: 4px;
+  border: 1px solid rgba(244, 193, 80, 0.45);
+}
